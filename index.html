@@ -12,6 +12,11 @@
     .name { color: #003366; background-color: #e6f2ff; padding: 15px 25px; border-radius: 8px; display: inline-block; }
     .profile-image { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; margin: 30px auto; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); display: block; }
     footer { text-align: center; font-size: 0.9em; color: #777; margin-top: 40px; }
+    .audio-player { text-align: center; margin-top: 30px; }
+    .audio-player audio { width: 100%; max-width: 400px; }
+    .audio-button { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background-color: #add8e6; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; z-index: 1000; }
+    .audio-button:hover { background-color: #87ceeb; transform: scale(1.1); }
+    .audio-button:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
@@ -27,6 +32,53 @@
     <a href="projects.html">Projects</a>
     <a href="contact.html">Contact</a>
   </nav>
+
+  <div class="audio-player">
+    <audio id="bgAudio" loop>
+      <source src="background-music.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <button class="audio-button" id="audioBtn" onclick="toggleAudio()">▶</button>
+  </div>
+
+  <script>
+    const audio = document.getElementById('bgAudio');
+    const audioBtn = document.getElementById('audioBtn');
+    let isPlaying = false;
+
+    // Try to autoplay on page load
+    function startAutoplay() {
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          isPlaying = true;
+          audioBtn.textContent = '⏸';
+        }).catch(function(error) {
+          console.log('Autoplay was prevented. User interaction required.');
+        });
+      }
+    }
+
+    // Autoplay on page load
+    window.addEventListener('load', startAutoplay);
+    document.addEventListener('click', function() {
+      if (!isPlaying) {
+        startAutoplay();
+      }
+    }, { once: true });
+
+    function toggleAudio() {
+      if (isPlaying) {
+        audio.pause();
+        audioBtn.textContent = '▶';
+        isPlaying = false;
+      } else {
+        audio.play();
+        audioBtn.textContent = '⏸';
+        isPlaying = true;
+      }
+    }
+  </script>
 
   <footer>
     <p>&copy; 2026 Hoang Gia Khanh. All rights reserved.</p>

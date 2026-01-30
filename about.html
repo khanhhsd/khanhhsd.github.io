@@ -19,9 +19,25 @@
     .detail-box li:before { content: "▸"; position: absolute; left: 0; color: #87ceeb; font-weight: bold; }
     .language-item { display: flex; align-items: center; gap: 12px; }
     .language-logo { width: 30px; height: 30px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 18px; }
+    .greenscreen-video { position: fixed; top: 20px; right: 20px; width: 30px; height: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); z-index: 999; overflow: hidden; cursor: pointer; transition: transform 0.3s ease; }
+    .greenscreen-video img { width: 100%; height: 100%; object-fit: cover; }
+    .greenscreen-video:hover { transform: scale(1.05); }
+    .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); }
+    .modal-content { margin: auto; display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%; }
+    .close-btn { position: absolute; top: 20px; right: 40px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2001; }
+    .close-btn:hover { color: #ccc; }
   </style>
 </head>
 <body>
+  <div class="greenscreen-video" onclick="openModal()">
+    <img src="greenscreen.gif" alt="Greenscreen GIF">
+  </div>
+
+  <div id="imageModal" class="modal" onclick="closeModal(event)">
+    <span class="close-btn" onclick="closeModal(event)">&times;</span>
+    <img class="modal-content" src="pyro.jpg" alt="Pyro Image">
+  </div>
+
   <header>
     <h1>About <span class="name">Hoang Gia Khanh</span></h1>
   </header>
@@ -57,5 +73,25 @@
   <footer>
     <p>&copy; 2026 Hoang Gia Khanh. All rights reserved.</p>
   </footer>
+
+  <script>
+    function openModal() {
+      document.getElementById('imageModal').style.display = 'block';
+    }
+
+    function closeModal(event) {
+      const modal = document.getElementById('imageModal');
+      if (event.target === modal || event.target.classList.contains('close-btn')) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Close modal when pressing Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        document.getElementById('imageModal').style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
