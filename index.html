@@ -1,87 +1,314 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Home - Hoang Gia Khanh</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background-color: #b3d9ff; color: #333; }
-    header { text-align: center; margin-bottom: 40px; }
-    nav { text-align: center; margin-bottom: 20px; }
-    nav a { margin: 0 10px; text-decoration: none; color: #2c3e50; font-weight: bold; padding: 10px 18px; background-color: #add8e6; border-radius: 5px; display: inline-block; transition: all 0.3s ease; }
-    nav a:hover { background-color: #87ceeb; transform: scale(1.05); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); }
-    .name { color: #003366; background-color: #e6f2ff; padding: 15px 25px; border-radius: 8px; display: inline-block; }
-    .profile-image { width: 250px; height: 250px; border-radius: 50%; object-fit: cover; margin: 30px auto; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); display: block; }
-    footer { text-align: center; font-size: 0.9em; color: #777; margin-top: 40px; }
-    .audio-player { text-align: center; margin-top: 30px; }
-    .audio-player audio { width: 100%; max-width: 400px; }
-    .audio-button { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; border-radius: 50%; background-color: #add8e6; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; z-index: 1000; }
-    .audio-button:hover { background-color: #87ceeb; transform: scale(1.1); }
-    .audio-button:active { transform: scale(0.95); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Thông tin Sinh viên</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, button {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+        }
+        button {
+            background-color: #2a9dca;
+            color: white;
+            cursor: pointer;
+            border: none;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #209aaa;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #2073aa;
+            color: white;
+            padding: 12px;
+        }
+        td {
+            padding: 12px;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .action-btn {
+            width: auto;
+            padding: 6px 12px;
+            margin: 2px;
+        }
+        .edit-btn {
+            background-color: #2196F3;
+        }
+        .edit-btn:hover {
+            background-color: #0b7dda;
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        .delete-btn:hover {
+            background-color: #da190b;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 20px;
+            width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Hello, I'm <span class="name">Hoang Gia Khanh</span></h1>
-    <p>Welcome to my personal website!</p>
-    <img src="profile.jpg" alt="Profile Photo" class="profile-image">
-  </header>
+    <div class="container">
+        <h1>Quản lý Thông tin Sinh viên</h1>
+        
+        <div id="formSection">
+            <h2>Thêm/Cập nhập thông tin sinh viên</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Mã SV:</label>
+                    <input type="text" id="maSV" placeholder="Nhập mã sinh viên">
+                </div>
+                <div class="form-group">
+                    <label>Họ và Tên:</label>
+                    <input type="text" id="hoTen" placeholder="Nhập họ và tên">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ngày sinh:</label>
+                    <input type="text" id="ngaySinh" placeholder="dd/mm/yyyy" pattern="(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}">
+                </div>
+                <div class="form-group">
+                    <label>Lớp học:</label>
+                    <input type="text" id="lop" placeholder="Nhập lớp học">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Điểm GPA:</label>
+                <input type="number" id="gpa" placeholder="Nhập điểm GPA" step="0.01" min="0" max="4">
+            </div>
+            <button onclick="themSinhVien()">Thêm Sinh viên</button>
+            <button onclick="resetForm()" style="background-color: #999;">Reset</button>
+        </div>
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About Me</a>
-    <a href="projects.html">Projects</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ và Tên</th>
+                    <th>Ngày sinh</th>
+                    <th>Lớp</th>
+                    <th>GPA</th>
+                    <th>Sửa</th>
+                </tr>
+            </thead>
+            <tbody id="danhSachSV">
+            </tbody>
+        </table>
+    </div>
 
-  <div class="audio-player">
-    <audio id="bgAudio" loop>
-      <source src="background-music.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-    <button class="audio-button" id="audioBtn" onclick="toggleAudio()">▶</button>
-  </div>
+    <script>
+        class SinhVien {
+            constructor(maSV, hoTen, ngaySinh, lop, gpa) {
+                this.maSV = maSV;
+                this.hoTen = hoTen;
+                this.ngaySinh = ngaySinh;
+                this.lop = lop;
+                this.gpa = gpa;
+            }
 
-  <script>
-    const audio = document.getElementById('bgAudio');
-    const audioBtn = document.getElementById('audioBtn');
-    let isPlaying = false;
+            capNhap(hoTen, ngaySinh, lop, gpa) {
+                this.hoTen = hoTen;
+                this.ngaySinh = ngaySinh;
+                this.lop = lop;
+                this.gpa = gpa;
+            }
+        }
 
-    // Try to autoplay on page load
-    function startAutoplay() {
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.then(function() {
-          isPlaying = true;
-          audioBtn.textContent = '⏸';
-        }).catch(function(error) {
-          console.log('Autoplay was prevented. User interaction required.');
-        });
-      }
-    }
+        let danhSach = [];
+        let editingIndex = -1;
 
-    // Autoplay on page load
-    window.addEventListener('load', startAutoplay);
-    document.addEventListener('click', function() {
-      if (!isPlaying) {
-        startAutoplay();
-      }
-    }, { once: true });
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '';
+            // If already in dd/mm/yyyy format, return as-is
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) return dateStr;
+            // Expecting ISO format yyyy-mm-dd
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                const [yy, mm, dd] = parts;
+                return `${dd.padStart(2, '0')}/${mm.padStart(2, '0')}/${yy}`;
+            }
+            return dateStr;
+        }
 
-    function toggleAudio() {
-      if (isPlaying) {
-        audio.pause();
-        audioBtn.textContent = '▶';
-        isPlaying = false;
-      } else {
-        audio.play();
-        audioBtn.textContent = '⏸';
-        isPlaying = true;
-      }
-    }
-  </script>
+        function isoToDMY(dateStr) {
+            if (!dateStr) return '';
+            if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+                const [y, m, d] = dateStr.split('-');
+                return `${d.padStart(2, '0')}/${m.padStart(2, '0')}/${y}`;
+            }
+            return dateStr;
+        }
 
-  <footer>
-    <p>&copy; 2026 Hoang Gia Khanh. All rights reserved.</p>
-  </footer>
+        function isValidDateDMY(str) {
+            if (!str) return false;
+            const m = str.match(/^([0-3]\d)\/(0[1-9]|1[0-2])\/(\d{4})$/);
+            if (!m) return false;
+            const dd = parseInt(m[1], 10);
+            const mm = parseInt(m[2], 10);
+            const yy = parseInt(m[3], 10);
+            const feb = ((yy % 4 === 0 && yy % 100 !== 0) || yy % 400 === 0) ? 29 : 28;
+            const monthLengths = [31, feb, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            return dd >= 1 && dd <= monthLengths[mm - 1];
+        }
+
+        function themSinhVien() {
+            const maSV = document.getElementById('maSV').value;
+            const hoTen = document.getElementById('hoTen').value;
+            let ngaySinh = document.getElementById('ngaySinh').value;
+            const lop = document.getElementById('lop').value;
+            const gpa = document.getElementById('gpa').value;
+
+            if (!maSV || !hoTen || !ngaySinh || !lop || !gpa) {
+                alert('Vui lòng điền đầy đủ thông tin!');
+                return;
+            }
+
+            // Accept both ISO (yyyy-mm-dd) and dd/mm/yyyy input; normalize to dd/mm/yyyy
+            if (/^\d{4}-\d{2}-\d{2}$/.test(ngaySinh)) {
+                ngaySinh = isoToDMY(ngaySinh);
+            }
+
+            if (!isValidDateDMY(ngaySinh)) {
+                alert('Ngày sinh không hợp lệ. Vui lòng dùng định dạng dd/mm/yyyy');
+                return;
+            }
+
+            if (editingIndex === -1) {
+                const sv = new SinhVien(maSV, hoTen, ngaySinh, lop, gpa);
+                danhSach.push(sv);
+            } else {
+                danhSach[editingIndex].capNhap(hoTen, ngaySinh, lop, gpa);
+                editingIndex = -1;
+            }
+
+            resetForm();
+            hienThiDanhSach();
+        }
+
+        function hienThiDanhSach() {
+            const tbody = document.getElementById('danhSachSV');
+            tbody.innerHTML = '';
+
+            danhSach.forEach((sv, index) => {
+                const row = `
+                    <tr>
+                        <td>${sv.maSV}</td>
+                        <td>${sv.hoTen}</td>
+                            <td>${formatDateDisplay(sv.ngaySinh)}</td>
+                        <td>${sv.lop}</td>
+                        <td>${sv.gpa}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="suaSinhVien(${index})">Sửa</button>
+                            <button class="action-btn delete-btn" onclick="xoaSinhVien(${index})">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function suaSinhVien(index) {
+            const sv = danhSach[index];
+            document.getElementById('maSV').value = sv.maSV;
+            document.getElementById('hoTen').value = sv.hoTen;
+            document.getElementById('ngaySinh').value = isoToDMY(sv.ngaySinh);
+            document.getElementById('lop').value = sv.lop;
+            document.getElementById('gpa').value = sv.gpa;
+            document.getElementById('maSV').disabled = true;
+            editingIndex = index;
+        }
+
+        function xoaSinhVien(index) {
+            if (confirm('Bạn chắc chắn muốn xóa sinh viên này?')) {
+                danhSach.splice(index, 1);
+                hienThiDanhSach();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('maSV').value = '';
+            document.getElementById('hoTen').value = '';
+            document.getElementById('ngaySinh').value = '';
+            document.getElementById('lop').value = '';
+            document.getElementById('gpa').value = '';
+            document.getElementById('maSV').disabled = false;
+            editingIndex = -1;
+        }
+    </script>
 </body>
 </html>
